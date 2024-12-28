@@ -18,17 +18,30 @@ export function MiniChart({
   
   // Create smooth curve points
   const points = [];
-  for (let i = 0; i < (data.length - 1) * 10; i++) {
-    const t = i / ((data.length - 1) * 10);
-    const index = t * (data.length - 1);
-    const index1 = Math.floor(index);
-    const index2 = Math.ceil(index);
-    const frac = index - index1;
+  const tension = 0.4; // Controls curve smoothness
+  
+  // Generate control points for the curve
+  const controlPoints = data.map((value, index) => ({
+    x: (index / (data.length - 1)) * 100,
+    y: height - ((value - min) / range) * height
+  }));
 
-    const value = data[index1] * (1 - frac) + (data[index2] || data[index1]) * frac;
-    const x = (index / (data.length - 1)) * 100;
-    const y = ((value - min) / range) * height;
-    points.push(`${x},${height - y}`);
+  // Create bezier curve points
+  for (let i = 0; i < controlPoints.length - 1; i++) {
+    const current = controlPoints[i];
+    const next = controlPoints[i + 1];
+    
+    // Calculate control points for the curve
+    const cp1x = current.x + (next.x - current.x) * tension;
+    const cp1y = current.y;
+    const cp2x = next.x - (next.x - current.x) * tension;
+    const cp2y = next.y;
+    
+    if (i === 0) {
+      points.push(`M${current.x},${current.y}`);
+    }
+    
+    points.push(`C${cp1x},${cp1y} ${cp2x},${cp2y} ${next.x},${next.y}`);
   }
 
   const pathPoints = points.join(' ');
@@ -50,32 +63,57 @@ export function MiniChart({
       >
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={color} stopOpacity="0.15" />
+            <stop offset="0%" stopColor={color} stopOpacity="0.3" />
             <stop offset="100%" stopColor={color} stopOpacity="0" />
           </linearGradient>
         </defs>
         
         <path
-          d={`M0,${height} ${pathPoints} 100,${height}`}
+          d={`M0,${height} ${pathPoints} L100,${height}`}
           fill={`url(#${gradientId})`}
           className="transition-all duration-300"
         />
         
         <path
-          d={`M${pathPoints}`}
+          d={pathPoints}
           fill="none"
           stroke={color}
-          strokeWidth="1.2"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           className="transition-all duration-300"
         />
 
+        {/* Outer ring */}
         <circle
           cx={maxPoint.x}
           cy={maxPoint.y}
-          r="2.5"
-          fill={color}
-          stroke="#000"
+          r="6"
+          fill="none"
+          stroke={color}
           strokeWidth="1"
+          strokeOpacity="0.3"
+          className="transition-all duration-300"
+        />
+
+        {/* Inner ring */}
+        <circle
+          cx={maxPoint.x}
+          cy={maxPoint.y}
+          r="4"
+          fill="none"
+          stroke={color}
+          strokeWidth="1"
+          strokeOpacity="0.6"
+          className="transition-all duration-300"
+        />
+
+        {/* Center point */}
+        <circle
+          cx={maxPoint.x}
+          cy={maxPoint.y}
+          r="2"
+          fill={color}
           className="transition-all duration-300"
         />
       </svg>

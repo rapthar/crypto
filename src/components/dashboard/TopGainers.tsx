@@ -31,9 +31,9 @@ export function TopGainers({ assets }: TopGainersProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 h-[calc(100%-80px)]">
+      <div className="grid grid-cols-3 gap-4">
         {assets.slice(0, 3).map((asset) => (
-          <div key={asset.id} className="aspect-square p-4 rounded-xl bg-[#0f0f0f] flex flex-col">
+          <div key={asset.id} className="p-4 rounded-xl bg-[#0f0f0f] flex flex-col h-[280px]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className={`w-8 h-8 rounded-full ${
@@ -86,7 +86,7 @@ export function TopGainers({ assets }: TopGainersProps) {
                   asset.symbol === 'USDT' ? '#ff4d4d' :
                   '#a855f7'
                 }
-                height={200}
+                height={100}
               />
             </div>
           </div>

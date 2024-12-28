@@ -3,7 +3,7 @@ import { Bell, Search, Settings, Upload } from 'lucide-react';
 
 export function TopBar() {
   return (
-    <div className="h-16 border-b border-[#ffffff0f] flex items-center px-4">
+    <div className="h-16 border-b border-[#ffffff0f] flex items-center px-4 pt-[20px]">
       <div className="flex items-center gap-3">
         <img
           src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=40&h=40&q=80"
