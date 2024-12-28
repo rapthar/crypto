@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#121212] text-white;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-[#ffffff0a] backdrop-blur-lg border border-[#ffffff1a] rounded-xl;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
